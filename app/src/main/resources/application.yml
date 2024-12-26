@@ -1,13 +1,20 @@
 spring:
-  data:
-    scylla:
-      contact-points: ${SCYLLA_CONTACT_POINTS:localhost}
-      port: 9042
-      keyspace-name: ${SCYLLA_KEYSPACE:logistics_keyspace}
-      local-datacenter: ${SCYLLA_DATACENTER:datacenter1}
-      schema-action: CREATE_IF_NOT_EXISTS
-      username: ${SCYLLA_USERNAME:logistics_name}
-      password: ${SCYLLA_PASSWORD:logistics_password}
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/logistics}
+    username: ${POSTGRES_USER:logistics_user}
+    password: ${POSTGRES_PASSWORD:logistics_password}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+flyway:
+  enabled: true
+  schemas: logistics
+  locations: classpath:db/migration
 
 logging:
   level:
