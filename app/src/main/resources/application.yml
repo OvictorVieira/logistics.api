@@ -1,0 +1,15 @@
+spring:
+  data:
+    scylla:
+      contact-points: ${SCYLLA_CONTACT_POINTS:localhost}
+      port: 9042
+      keyspace-name: ${SCYLLA_KEYSPACE:logistics_keyspace}
+      local-datacenter: ${SCYLLA_DATACENTER:datacenter1}
+      schema-action: CREATE_IF_NOT_EXISTS
+      username: ${SCYLLA_USERNAME:logistics_name}
+      password: ${SCYLLA_PASSWORD:logistics_password}
+
+logging:
+  level:
+    root: INFO
+    com.logistics: DEBUG
