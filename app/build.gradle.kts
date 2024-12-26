@@ -11,12 +11,9 @@ repositories {
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web:3.1.0")
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa:3.1.0")
-    implementation("org.springframework.boot:spring-boot-starter-data-rest:3.1.0")
-    implementation("org.springframework.boot:spring-boot-starter-validation:3.1.0")
-    implementation("org.springframework.boot:spring-boot-starter-jdbc:3.1.0")
-    implementation("org.postgresql:postgresql:42.6.0")
+    implementation("org.springframework.boot:spring-boot-starter-data-cassandra:3.1.0")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.0")
+    implementation("com.datastax.oss:java-driver-core:4.13.0")
 }
 
 testing {
