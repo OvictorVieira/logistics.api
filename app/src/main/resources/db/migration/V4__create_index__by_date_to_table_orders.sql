@@ -1,0 +1,1 @@
+CREATE INDEX IF NOT EXISTS idx_orders_purchase_date ON logistics.orders (purchase_date);
