@@ -1,4 +1,4 @@
 CREATE TABLE IF NOT EXISTS logistics.users (
-    id BIGINT PRIMARY KEY,
+    user_id BIGINT PRIMARY KEY,
     name VARCHAR(45) NOT NULL
 );
