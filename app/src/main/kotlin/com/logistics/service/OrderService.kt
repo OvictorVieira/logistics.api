@@ -5,6 +5,7 @@ import com.logistics.repository.OrderRepository
 import com.logistics.dto.out.UserOrdersResponse
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.time.LocalDate
 
 @Service
 class OrderService @Autowired constructor(
@@ -12,8 +13,8 @@ class OrderService @Autowired constructor(
     private val orderMapper: OrderMapper
 ) {
 
-    fun getAllOrdersGroupedByUser(): List<UserOrdersResponse> {
-        val results = orderRepository.findAllOrdersWithUserAndProduct()
+    fun getOrdersWithFilters(userId: Long?, fromDate: LocalDate?, toDate: LocalDate?): List<UserOrdersResponse> {
+        val results = orderRepository.findOrdersWithFilters(userId, fromDate, toDate)
         return mapResultsToUserOrders(results)
     }
 
