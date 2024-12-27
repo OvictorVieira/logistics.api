@@ -1,8 +1,9 @@
 CREATE TABLE IF NOT EXISTS logistics.orders (
-    id BIGINT PRIMARY KEY,
+    order_id BIGINT NOT NULL,
     user_id BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
     purchase_date DATE NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES logistics.users(id),
-    FOREIGN KEY (product_id) REFERENCES logistics.products(id)
+    PRIMARY KEY (order_id, user_id, product_id),
+    FOREIGN KEY (user_id) REFERENCES logistics.users(user_id),
+    FOREIGN KEY (product_id) REFERENCES logistics.products(product_id)
 );
