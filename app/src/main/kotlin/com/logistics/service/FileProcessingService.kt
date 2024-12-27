@@ -1,5 +1,17 @@
 package com.logistics.service
 
+import com.logistics.domain.Order
+import com.logistics.domain.ProcessingStatus
+import com.logistics.domain.Product
+import com.logistics.domain.User
+import com.logistics.dto.mapper.OrderData
+import com.logistics.enum.ProcessingStatusEnum
+import com.logistics.repository.OrderRepository
+import com.logistics.repository.ProcessingStatusRepository
+import com.logistics.repository.ProductRepository
+import com.logistics.repository.UserRepository
+import com.logistics.util.ErrorMessageGetter
+import com.logistics.util.LineParser
 import kotlinx.coroutines.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -8,16 +20,19 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
-import com.logistics.repository.ProcessingStatusRepository
-import com.logistics.domain.ProcessingStatus
-import com.logistics.enum.ProcessingStatusEnum
+import org.slf4j.Logger import org.slf4j.LoggerFactory
+import org.springframework.dao.DataIntegrityViolationException
 
 @Service
-class FileProcessingService @Autowired constructor(
-    private val processingStatusRepository: ProcessingStatusRepository
+open class FileProcessingService @Autowired constructor(
+    private val processingStatusRepository: ProcessingStatusRepository,
+    private val userRepository: UserRepository,
+    private val productRepository: ProductRepository,
+    private val orderRepository: OrderRepository
 ) {
 
     private val uploadDir: Path = Paths.get("uploads")
+    private val logger: Logger = LoggerFactory.getLogger(LineParser::class.java)
 
     fun initiateFileProcessing(file: MultipartFile): ProcessingStatus {
         createUploadDirectoryIfNeeded()
@@ -51,7 +66,48 @@ class FileProcessingService @Autowired constructor(
         }
     }
 
-    private suspend fun processFile(filePath: Path, statusId: Long) {
-        // TODO
+    open suspend fun processFile(filePath: Path, statusId: Long) {
+        updateStatus(statusId, ProcessingStatusEnum.PROCESSING.code, ProcessingStatusEnum.PROCESSING.description)
+        try {
+            withContext(Dispatchers.IO) {
+                Files.newBufferedReader(filePath)
+            }.use { reader ->
+                reader.lineSequence().forEach { line ->
+                    val data = LineParser.parseLine(line)
+                    saveToDatabase(data)
+                }
+            }
+            updateStatus(statusId, ProcessingStatusEnum.PROCESSED.code, ProcessingStatusEnum.PROCESSED.description)
+        } catch (e: DataIntegrityViolationException) {
+            val detailMessage = ErrorMessageGetter.getDetailMessage(e.cause?.message)
+            updateStatus(statusId, ProcessingStatusEnum.FAILED.code, "$detailMessage")
+        } catch (e: Exception) {
+            updateStatus(statusId, ProcessingStatusEnum.FAILED.code, "${e.message}")
+        }
+    }
+
+    private suspend fun saveToDatabase(orderData: OrderData) = coroutineScope {
+        launch {
+            userRepository.findByUserId(orderData.userId) ?:
+                userRepository.save(User(userId = orderData.userId, name = orderData.name))
+
+            productRepository.findByProductId(orderData.productId) ?:
+                productRepository.save(Product(productId = orderData.productId, value = orderData.productValue))
+
+            val order = Order(
+                orderId = orderData.orderId,
+                userId = orderData.userId,
+                productId = orderData.productId,
+                purchaseDate = orderData.purchaseDate
+            )
+
+            orderRepository.save(order)
+        }
+    }
+
+    private fun updateStatus(id: Long, status: Int, description: String? = null) {
+        val processingStatus = processingStatusRepository.findById(id).orElseThrow { IllegalArgumentException("Invalid status ID") }
+        val updatedStatus = processingStatus.copy(status = status, description = description)
+        processingStatusRepository.save(updatedStatus)
     }
 }
