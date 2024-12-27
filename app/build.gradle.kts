@@ -16,13 +16,17 @@ dependencyManagement {
 }
 
 dependencies {
+    runtimeOnly("org.postgresql:postgresql")
+    implementation("org.flywaydb:flyway-core")
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("org.reactivestreams:reactive-streams")
     implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.springframework.boot:spring-boot-starter-data-rest")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.flywaydb:flyway-core")
-    runtimeOnly("org.postgresql:postgresql")
+    implementation("org.springframework.boot:spring-boot-starter-data-rest")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
+    implementation("org.slf4j:slf4j-api:1.7.30")
+    implementation("ch.qos.logback:logback-classic:1.2.3")
 }
 
 testing {
