@@ -12,6 +12,7 @@ import com.logistics.repository.ProductRepository
 import com.logistics.repository.UserRepository
 import com.logistics.util.ErrorMessageGetter
 import com.logistics.util.LineParser
+import com.logistics.exception.RecordNotFoundException
 import kotlinx.coroutines.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -20,7 +21,6 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
-import org.slf4j.Logger import org.slf4j.LoggerFactory
 import org.springframework.dao.DataIntegrityViolationException
 
 @Service
@@ -32,7 +32,9 @@ open class FileProcessingService @Autowired constructor(
 ) {
 
     private val uploadDir: Path = Paths.get("uploads")
-    private val logger: Logger = LoggerFactory.getLogger(LineParser::class.java)
+
+    fun getProcessingStatus(id: Long): ProcessingStatus =
+        processingStatusRepository.findById(id).orElseThrow { RecordNotFoundException("Record not found") }
 
     fun initiateFileProcessing(file: MultipartFile): ProcessingStatus {
         createUploadDirectoryIfNeeded()
