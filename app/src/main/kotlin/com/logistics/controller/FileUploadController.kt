@@ -9,7 +9,7 @@ import com.logistics.service.FileProcessingService
 import com.logistics.dto.out.FileUploadResponse
 import com.logistics.enum.ProcessingStatusEnum
 import com.logistics.exception.RecordNotFoundException
-import com.logistics.util.ApiResponse
+import com.logistics.dto.out.ApiResponse
 
 @RestController
 @RequestMapping("/api/files")

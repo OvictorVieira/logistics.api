@@ -1,4 +1,4 @@
-package com.logistics.util
+package com.logistics.dto.out
 
 data class ApiResponse<T>(
     val success: Boolean,
