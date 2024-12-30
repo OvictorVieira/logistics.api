@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     id("org.springframework.boot") version "3.1.0"
     id("io.spring.dependency-management") version "1.1.0"
+    id("jacoco")
     application
 }
 
@@ -46,4 +47,22 @@ java {
 
 application {
     mainClass = "com.logistics.AppKt"
+}
+
+jacoco {
+    toolVersion = "0.8.12"
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+    reports {
+        xml.required.set(true)
+        csv.required.set(false)
+        html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
+    }
+}
+
+tasks.test {
+    useJUnitPlatform()
+    finalizedBy(tasks.jacocoTestReport)
 }
