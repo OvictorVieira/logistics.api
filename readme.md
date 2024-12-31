@@ -3,8 +3,7 @@
 ## Overview
 This project is a Kotlin-based logistics file processing service that handles file uploads, parses order data, 
 and manages user, product, and order information. The service is designed to be scalable, 
-with a RESTful API for file uploads and order retrieval. The system leverages Postgres for high-performance and 
-low-latency data storage, ensuring scalability for large datasets.
+with a RESTful API for file uploads and order retrieval, by processing the data with coroutines.
 
 ---
 
@@ -120,7 +119,7 @@ low-latency data storage, ensuring scalability for large datasets.
 
 ### Download Postman Collections
 
-You can download the postman collection by [clicking here]()
+You can download the postman collection by [clicking here](https://github.com/user-attachments/files/18278719/Logistics.postman_collection.json)
 
 ### Upload File
 ```
@@ -128,7 +127,7 @@ POST /api/files/upload
 ```
 Uploads a `.txt` file for processing.
 
-Download example content file [here]()
+Download example content file [here](https://github.com/user-attachments/files/18278722/data_1.txt)
 
 ### Get Processing Status
 ```
