@@ -159,6 +159,6 @@ Fetches orders based on:
 
 ### Coverage Report
 
-The jacoco coverage report will be stored in `build/jacocoHtml/index.html` folder.
+The jacoco coverage report will be stored in `app/build/jacocoHtml/index.html` folder.
 
 ---
